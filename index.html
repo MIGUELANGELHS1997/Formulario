@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-CHAT-R/F™ - 1 Hoja Carta</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 0.7cm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            line-height: 1.00;
+        }
+        
+        body {
+            width: 21.59cm;
+            height: 27.94cm;
+            padding: 0.8cm;
+            font-size: 9.5pt;
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1.5px solid #2c3e50;
+        }
+        
+        .header h1 {
+            font-size: 13pt;
+            color: #2c3e50;
+            margin-bottom: 3px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            font-size: 8.5pt;
+            color: #555;
+        }
+        
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .form-group {
+            margin-bottom: 5px;
+        }
+        
+        .form-group label {
+            font-size: 8.5pt;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 2px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 9pt;
+        }
+        
+        .questions-container {
+            column-count: 2;
+            column-gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .question-item {
+            break-inside: avoid;
+            margin-bottom: 8px;
+            padding: 6px;
+            background-color: white;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            font-size: 9pt;
+            margin-bottom: 3px;
+        }
+        
+        .question-number {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .example-text {
+            font-size: 8pt;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        
+        .answer-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .answer-option {
+            display: flex;
+            align-items: center;
+        }
+        
+        .answer-option input {
+            margin-right: 4px;
+        }
+        
+        .answer-option label {
+            font-size: 9pt;
+        }
+        
+        .scoring-section {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f7fa;
+            border-radius: 4px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .total-score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        .total-score label {
+            font-weight: bold;
+            font-size: 10pt;
+            margin-right: 10px;
+        }
+        
+        .total-score input {
+            width: 50px;
+            padding: 4px;
+            text-align: center;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+        
+        .scoring-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .scoring-box {
+            padding: 8px;
+            border-radius: 4px;
+            background-color: white;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .scoring-box h4 {
+            font-size: 9.5pt;
+            color: white;
+            padding: 5px;
+            margin: -8px -8px 6px -8px;
+            border-radius: 3px 3px 0 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .low-risk h4 {
+            background-color: #4caf50;
+        }
+        
+        .medium-risk h4 {
+            background-color: #ff9800;
+        }
+        
+        .high-risk h4 {
+            background-color: #f44336;
+        }
+        
+        .scoring-box p {
+            font-size: 8.5pt;
+            line-height: 1.3;
+        }
+        
+        .note {
+            font-size: 8.5pt;
+            color: #555;
+            margin-top: 6px;
+            padding-left: 6px;
+            border-left: 2px solid #2c3e50;
+        }
+        
+        .risk-item {
+            color: #e53935;
+            font-weight: bold;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 9pt;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        
+        .btn-print {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .btn-word {
+            background-color: #2196f3;
+            color: white;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Entrevista de Seguimiento al M-CHAT-R/F™</h1>
+        <h2>Hoja de Puntuación</h2>
+        <p>Por favor tenga en cuenta: Sí/No han sido sustituidos por Pasa/No Pasa</p>
+    </div>
+
+    <div class="patient-info">
+        <div class="form-group">
+            <label>Nombre del niño/a:</label>
+            <input type="text" id="childName">
+        </div>
+        <div class="form-group">
+            <label>Edad (meses):</label>
+            <input type="number" id="childAge" min="0" max="120">
+        </div>
+        <div class="form-group">
+            <label>Nombre del evaluador:</label>
+            <input type="text" id="evaluatorName">
+        </div>
+        <div class="form-group">
+            <label>Fecha:</label>
+            <input type="date" id="date">
+        </div>
+    </div>
+
+    <div class="questions-container">
+        <!-- Preguntas 1-10 -->
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">1.</span> Si usted señala algo al otro lado de la habitación, ¿su hijo/a lo mira?</div>
+            <div class="example-text">Ej: Si usted señala a un juguete, un peluche o un animal, ¿su hijo/a lo mira?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q1" value="Pasa" id="q1_pasa"><label for="q1_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q1" value="No Pasa" id="q1_nopasa"><label for="q1_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">2.</span> ¿Alguna vez se ha preguntado si su hijo/a es sordo/a?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q2" value="Pasa" id="q2_pasa" class="risk-item"><label for="q2_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q2" value="No Pasa" id="q2_nopasa"><label for="q2_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">3.</span> ¿Su hijo/a juega juegos de fantasía o imaginación?</div>
+            <div class="example-text">Ej: "Hace como que" bebe de una taza vacía, habla por teléfono o da de comer a una muñeca o peluche</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q3" value="Pasa" id="q3_pasa"><label for="q3_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q3" value="No Pasa" id="q3_nopasa"><label for="q3_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">4.</span> ¿A su hijo le gusta subirse a cosas?</div>
+            <div class="example-text">Ej: a una silla, escaleras, o tobogán</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q4" value="Pasa" id="q4_pasa"><label for="q4_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q4" value="No Pasa" id="q4_nopasa"><label for="q4_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">5.</span> ¿Hace su hijo/a movimientos inusuales con sus dedos cerca de sus ojos?</div>
+            <div class="example-text">Ej: mueve sus dedos cerca de sus ojos de manera inusual</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q5" value="Pasa" id="q5_pasa" class="risk-item"><label for="q5_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q5" value="No Pasa" id="q5_nopasa"><label for="q5_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">6.</span> ¿Su hijo/a señala con un dedo cuando quiere pedir algo o pedir ayuda?</div>
+            <div class="example-text">Ej: señala un juguete o algo de comer que está fuera de su alcance</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q6" value="Pasa" id="q6_pasa"><label for="q6_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q6" value="No Pasa" id="q6_nopasa"><label for="q6_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">7.</span> ¿Su hijo/a señala con un dedo cuando quiere mostrarle algo que le llama la atención?</div>
+            <div class="example-text">Ej: señala un avión en el cielo o un camión muy grande en la calle</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q7" value="Pasa" id="q7_pasa"><label for="q7_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q7" value="No Pasa" id="q7_nopasa"><label for="q7_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">8.</span> ¿Su hijo/a se interesa en otros niños?</div>
+            <div class="example-text">Ej: mira con atención a otros niños, les sonríe o se les acerca</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q8" value="Pasa" id="q8_pasa"><label for="q8_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q8" value="No Pasa" id="q8_nopasa"><label for="q8_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">9.</span> ¿Su hijo/a le muestra cosas acercándolas o levantándolas para que usted las vea - no para pedir ayuda sino solamente para compartirlas con usted?</div>
+            <div class="example-text">Ej: le muestra una flor o un peluche o un coche de juguete</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q9" value="Pasa" id="q9_pasa"><label for="q9_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q9" value="No Pasa" id="q9_nopasa"><label for="q9_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">10.</span> ¿Su hijo/a responde cuando usted le llama por su nombre?</div>
+            <div class="example-text">Ej: se vuelve, habla o balbucea, o deja de hacer lo que estaba haciendo para mirarle</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q10" value="Pasa" id="q10_pasa"><label for="q10_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q10" value="No Pasa" id="q10_nopasa"><label for="q10_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <!-- Preguntas 11-20 -->
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">11.</span> ¿Cuándo usted sonríe a su hijo/a, él o ella también le sonríe?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q11" value="Pasa" id="q11_pasa"><label for="q11_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q11" value="No Pasa" id="q11_nopasa"><label for="q11_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">12.</span> ¿Le molestan a su hijo/a ruidos cotidianos?</div>
+            <div class="example-text">Ej: la aspiradora o la música, incluso cuando está no está excesivamente alta</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q12" value="Pasa" id="q12_pasa" class="risk-item"><label for="q12_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q12" value="No Pasa" id="q12_nopasa"><label for="q12_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">13.</span> ¿Su hijo/a camina solo?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q13" value="Pasa" id="q13_pasa"><label for="q13_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q13" value="No Pasa" id="q13_nopasa"><label for="q13_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">14.</span> ¿Su hijo/a le mira a los ojos cuando usted le habla, juega con él o ella, o lo viste?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q14" value="Pasa" id="q14_pasa"><label for="q14_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q14" value="No Pasa" id="q14_nopasa"><label for="q14_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">15.</span> ¿Su hijo/a imita sus movimientos?</div>
+            <div class="example-text">Ej: decir adiós con la mano, aplaudir o algún ruido gracioso que usted haga</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q15" value="Pasa" id="q15_pasa"><label for="q15_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q15" value="No Pasa" id="q15_nopasa"><label for="q15_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">16.</span> Si usted se gira a ver algo, ¿su hijo/a trata de mirar hacia lo que usted está mirando?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q16" value="Pasa" id="q16_pasa"><label for="q16_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q16" value="No Pasa" id="q16_nopasa"><label for="q16_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">17.</span> ¿Su hijo/a intenta que usted le mire/preste atención?</div>
+            <div class="example-text">Ej: busca que usted le haga un cumplido, o le dice "mira" ó "mírame"</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q17" value="Pasa" id="q17_pasa"><label for="q17_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q17" value="No Pasa" id="q17_nopasa"><label for="q17_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">18.</span> ¿Su hijo/a le entiende cuando usted le dice que haga algo?</div>
+            <div class="example-text">Ej: si usted no hace gestos, ¿su hijo/a entiende "pon el libro encima de la silla" o "tráeme la manta"?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q18" value="Pasa" id="q18_pasa"><label for="q18_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q18" value="No Pasa" id="q18_nopasa"><label for="q18_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">19.</span> Si algo nuevo pasa, ¿su hijo/a le mira para ver como usted reacciona al respecto?</div>
+            <div class="example-text">Ej: si oye un ruido extraño o ve un juguete nuevo, ¿se gira a ver su cara?</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q19" value="Pasa" id="q19_pasa"><label for="q19_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q19" value="No Pasa" id="q19_nopasa"><label for="q19_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+        
+        <div class="question-item">
+            <div class="question-text"><span class="question-number">20.</span> ¿Le gustan a su hijo/a los juegos de movimiento?</div>
+            <div class="example-text">Ej: le gusta que le balancee, o que le haga "el caballito" sentándole en sus rodillas</div>
+            <div class="answer-options">
+                <div class="answer-option"><input type="radio" name="q20" value="Pasa" id="q20_pasa"><label for="q20_pasa">Pasa</label></div>
+                <div class="answer-option"><input type="radio" name="q20" value="No Pasa" id="q20_nopasa"><label for="q20_nopasa">No Pasa</label></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scoring-section">
+        <div class="total-score">
+            <label>Puntuación Total:</label>
+            <input type="text" id="totalScore" readonly>
+            <button class="btn btn-calculate no-print" onclick="calculateScore()">Calcular</button>
+        </div>
+        
+        <div class="note">
+            <strong>Nota:</strong> Para todos los ítems, excepto el 2, 5 y 12, la respuesta "NO " indica riesgo de TEA; para los ítems 2, 5, y 12, "SÍ " indica riesgo de TEA. El siguiente algoritmo potencia las propiedades psicométricas del M‐ CHAT ‐R: 
+        </div>
+        
+        <div class="scoring-grid">
+            <div class="scoring-box low-risk">
+                <h4>BAJO RIESGO (0-2)</h4>
+                <p>Si el niño es menor de 24 meses, repetir MCHAT-R a los 24m. Ninguna otra medida necesaria a menos que la vigilancia del desarrollo indique riesgo de TEA.
+                </p>
+            </div>
+            
+            <div class="scoring-box medium-risk">
+                <h4>MEDIO (3-7)</h4>
+                <p>Administrar la entrevista de seguimiento (M-CHAT-R/F). Si la puntuación se mantiene en ≥2, remitir para evaluación diagnóstica. Si es 0-1, vigilar en visitas futuras.
+                </p>
+            </div>
+            
+            <div class="scoring-box high-risk">
+                <h4>ALTO (8-20)</h4>
+                <p>Se puede prescindir de la entrevista de seguimiento. Remitir de inmediato para evaluación diagnóstica y determinar necesidad de intervención temprana.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons no-print">
+        <button class="btn btn-print" onclick="window.print()">Imprimir</button>
+        <button class="btn btn-word" onclick="exportToWord()">Descargar Word</button>
+    </div>
+
+    <script>
+        // Fecha actual
+        document.getElementById('date').valueAsDate = new Date();
+        
+        // Calcular puntuación
+        function calculateScore() {
+            let score = 0;
+            
+            // Preguntas normales (No Pasa = riesgo)
+            const normalQuestions = [1, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20];
+            normalQuestions.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q}"]:checked`);
+                if (selected && selected.value === "No Pasa") score++;
+            });
+            
+            // Preguntas inversas (Pasa = riesgo)
+            const inverseQuestions = [2, 5, 12];
+            inverseQuestions.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q}"]:checked`);
+                if (selected && selected.value === "Pasa") score++;
+            });
+            
+            document.getElementById('totalScore').value = score;
+        }
+        
+        // Exportar a Word
+        function exportToWord() {
+            const htmlContent = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <title>M-CHAT-R/F™ - Resultados</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; font-size: 11pt; }
+                        h1 { color: #2c3e50; }
+                        table { border-collapse: collapse; width: 100%; }
+                        th, td { border: 1px solid #ddd; padding: 6px; }
+                        .risk { color: red; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <h1>M-CHAT-R/F™ - Resultados</h1>
+                    <p><strong>Nombre del niño/a:</strong> ${document.getElementById('childName').value}</p>
+                    <p><strong>Edad:</strong> ${document.getElementById('childAge').value} meses</p>
+                    <p><strong>Evaluador:</strong> ${document.getElementById('evaluatorName').value}</p>
+                    <p><strong>Fecha:</strong> ${document.getElementById('date').value}</p>
+                    <p><strong>Puntuación Total:</strong> ${document.getElementById('totalScore').value || '0'}</p>
+                    
+                    <h2>Respuestas</h2>
+                    <table>
+                        <tr><th>Pregunta</th><th>Respuesta</th></tr>
+                        ${generateAnswerRows()}
+                    </table>
+                    
+                    <h2>Interpretación</h2>
+                    ${generateRiskAssessment()}
+                </body>
+                </html>
+            `;
+            
+            const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `M-CHAT-R-F_${document.getElementById('childName').value || 'resultados'}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function generateAnswerRows() {
+            let rows = '';
+            for (let i = 1; i <= 20; i++) {
+                const questionText = document.querySelector(`.question-number:nth-child(${i})`).parentNode.textContent.trim();
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const answer = selected ? selected.value : 'No respondido';
+                
+                const isRiskItem = [2, 5, 12].includes(i);
+                const isRiskAnswer = (isRiskItem && answer === 'Pasa') || (!isRiskItem && answer === 'No Pasa');
+                
+                rows += `<tr>
+                    <td>${i}. ${questionText}</td>
+                    <td ${isRiskAnswer ? 'class="risk"' : ''}>${answer}</td>
+                </tr>`;
+            }
+            return rows;
+        }
+        
+        function generateRiskAssessment() {
+            const score = parseInt(document.getElementById('totalScore').value) || 0;
+            let assessment = '';
+            
+            if (score <= 2) {
+                assessment = `
+                    <h3 style="color: #4caf50;">BAJO RIESGO (0-2)</h3>
+                    <p>Repetir a los 24 meses si el niño es menor de 24 meses. Ninguna otra medida necesaria a menos que la vigilancia del desarrollo indique riesgo de TEA.</p>
+                `;
+            } else if (score >= 3 && score <= 7) {
+                assessment = `
+                    <h3 style="color: #ff9800;">RIESGO MEDIO (3-7)</h3>
+                    <p>Administrar la entrevista de seguimiento (M-CHAT-R/F). Si la puntuación se mantiene en 2 o superior, el niño ha resultado positivo. Medida necesaria: remita al niño para una evaluación diagnóstica y para determinar necesidad de atención temprana. Si la puntuación es 0-1, el niño ha resultado negativo. Ninguna otra medida es necesaria a menos que la vigilancia del desarrollo indique riesgo de TEA. El niño debe seguir vigilado en futuras visitas del programa del niño sano.</p>
+                `;
+            } else if (score >= 8) {
+                assessment = `
+                    <h3 style="color: #f44336;">RIESGO ALTO (8-20)</h3>
+                    <p>Es aceptable prescindir de la entrevista de seguimiento y se debe remitir el caso de inmediato para evaluación diagnóstica y para determinar necesidad de intervención temprana.</p>
+                `;
+            }
+            
+            return assessment;
+        }
+        
+        // Calcular automáticamente al cambiar respuestas
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', calculateScore);
+        });
+    </script>
+</body>
+</html>
