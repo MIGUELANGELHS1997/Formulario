@@ -492,121 +492,220 @@
         <button class="btn btn-word" onclick="exportToWord()">Descargar Word</button>
     </div>
 
-    <script>
-        // Fecha actual
-        document.getElementById('date').valueAsDate = new Date();
+<script>
+ 
+    function exportToWord() {
+        // Obtener datos del formulario
+        const childName = document.getElementById('childName').value || 'Niño/a';
+        const childAge = document.getElementById('childAge').value || 'No especificado';
+        const evaluatorName = document.getElementById('evaluatorName').value || 'No especificado';
+        const date = document.getElementById('date').value || 'No especificada';
+        const totalScore = document.getElementById('totalScore').value || '0';
         
-        // Calcular puntuación
-        function calculateScore() {
-            let score = 0;
-            
-            // Preguntas normales (No Pasa = riesgo)
-            const normalQuestions = [1, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20];
-            normalQuestions.forEach(q => {
-                const selected = document.querySelector(`input[name="q${q}"]:checked`);
-                if (selected && selected.value === "No Pasa") score++;
-            });
-            
-            // Preguntas inversas (Pasa = riesgo)
-            const inverseQuestions = [2, 5, 12];
-            inverseQuestions.forEach(q => {
-                const selected = document.querySelector(`input[name="q${q}"]:checked`);
-                if (selected && selected.value === "Pasa") score++;
-            });
-            
-            document.getElementById('totalScore').value = score;
-        }
+        // Dividir preguntas en 2 grupos para las filas
+        const allQuestions = Array.from(document.querySelectorAll('.question-item'));
+        const half = Math.ceil(allQuestions.length / 2);
+        const row1Questions = allQuestions.slice(0, half);
+        const row2Questions = allQuestions.slice(half);
         
-        // Exportar a Word
-        function exportToWord() {
-            const htmlContent = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head>
-                    <title>M-CHAT-R/F™ - Resultados</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; font-size: 11pt; }
-                        h1 { color: #2c3e50; }
-                        table { border-collapse: collapse; width: 100%; }
-                        th, td { border: 1px solid #ddd; padding: 6px; }
-                        .risk { color: red; font-weight: bold; }
-                    </style>
-                </head>
-                <body>
-                    <h1>M-CHAT-R/F™ - Resultados</h1>
-                    <p><strong>Nombre del niño/a:</strong> ${document.getElementById('childName').value}</p>
-                    <p><strong>Edad:</strong> ${document.getElementById('childAge').value} meses</p>
-                    <p><strong>Evaluador:</strong> ${document.getElementById('evaluatorName').value}</p>
-                    <p><strong>Fecha:</strong> ${document.getElementById('date').value}</p>
-                    <p><strong>Puntuación Total:</strong> ${document.getElementById('totalScore').value || '0'}</p>
-                    
-                    <h2>Respuestas</h2>
-                    <table>
-                        <tr><th>Pregunta</th><th>Respuesta</th></tr>
-                        ${generateAnswerRows()}
-                    </table>
-                    
-                    <h2>Interpretación</h2>
-                    ${generateRiskAssessment()}
-                </body>
-                </html>
-            `;
-            
-            const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `M-CHAT-R-F_${document.getElementById('childName').value || 'resultados'}.doc`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-        
-        function generateAnswerRows() {
-            let rows = '';
-            for (let i = 1; i <= 20; i++) {
-                const questionText = document.querySelector(`.question-number:nth-child(${i})`).parentNode.textContent.trim();
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                const answer = selected ? selected.value : 'No respondido';
+        // Función para generar HTML de preguntas
+        const generateQuestionsHTML = questions => {
+            return questions.map(qItem => {
+                const qText = qItem.querySelector('.question-text').textContent;
+                const example = qItem.querySelector('.example-text')?.textContent || '';
+                const selected = qItem.querySelector('input:checked');
+                const answer = selected ? selected.value : 'No respondida';
                 
-                const isRiskItem = [2, 5, 12].includes(i);
-                const isRiskAnswer = (isRiskItem && answer === 'Pasa') || (!isRiskItem && answer === 'No Pasa');
+                return `
+                    <div class="question-item">
+                        <div class="question-text">${qText}</div>
+                        ${example ? `<div class="example-text">${example}</div>` : ''}
+                        <div class="answer"><strong>Respuesta:</strong> ${answer}</div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        // Crear el contenido HTML optimizado
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>M-CHAT-R/F™ - ${childName}</title>
+                <style>
+                    @page {
+                        size: letter;
+                        margin: 0.5cm;
+                    }
+                    body {
+                        font-family: Arial, sans-serif;
+                        font-size: 8.5pt;
+                        line-height: 1.15;
+                        margin: 0;
+                        padding: 10px;
+                        width: 100%;
+                        height: 100%;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 5px;
+                        padding-bottom: 3px;
+                        border-bottom: 1px solid #2c3e50;
+                    }
+                    .header h1 {
+                        font-size: 11pt;
+                        color: #2c3e50;
+                        margin: 2px 0;
+                    }
+                    .header h2 {
+                        font-size: 9.5pt;
+                        margin: 2px 0;
+                    }
+                    .patient-info {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 5px;
+                        margin-bottom: 6px;
+                        padding: 5px;
+                        background-color: #f8f9fa;
+                        border-radius: 2px;
+                        font-size: 7.5pt;
+                    }
+                    .questions-rows-container {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 5px;
+                        margin-bottom: 6px;
+                    }
+                    .questions-row {
+                        display: grid;
+                        grid-template-columns: repeat(5, 1fr);
+                        gap: 5px;
+                    }
+                    .question-item {
+                        padding: 4px;
+                        background-color: white;
+                        border: 1px solid #eee;
+                        border-radius: 2px;
+                        font-size: 7.5pt;
+                        page-break-inside: avoid;
+                    }
+                    .question-text {
+                        font-weight: bold;
+                        margin-bottom: 2px;
+                        font-size: 8pt;
+                    }
+                    .example-text {
+                        font-style: italic;
+                        color: #666;
+                        font-size: 7pt;
+                        margin-bottom: 2px;
+                        line-height: 1.1;
+                    }
+                    .answer {
+                        font-size: 7.5pt;
+                        margin-top: 2px;
+                    }
+                    .scoring-section {
+                        margin-top: 6px;
+                        padding: 6px;
+                        background-color: #f5f7fa;
+                        border-radius: 2px;
+                        border: 1px solid #e0e6ed;
+                    }
+                    .total-score {
+                        text-align: center;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                        font-size: 9pt;
+                    }
+                    .scoring-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 5px;
+                        margin-top: 5px;
+                    }
+                    .scoring-box {
+                        padding: 5px;
+                        border-radius: 2px;
+                        background-color: white;
+                        border: 1px solid #e0e6ed;
+                        font-size: 7.5pt;
+                        line-height: 1.2;
+                    }
+                    .scoring-box h4 {
+                        font-size: 8pt;
+                        color: white;
+                        padding: 3px;
+                        margin: -5px -5px 5px -5px;
+                        border-radius: 1px 1px 0 0;
+                        text-align: center;
+                    }
+                    .low-risk h4 { background-color: #4caf50; }
+                    .medium-risk h4 { background-color: #ff9800; }
+                    .high-risk h4 { background-color: #f44336; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>M-CHAT-R/F™</h1>
+                    <h2>Hoja de Puntuación</h2>
+                </div>
                 
-                rows += `<tr>
-                    <td>${i}. ${questionText}</td>
-                    <td ${isRiskAnswer ? 'class="risk"' : ''}>${answer}</td>
-                </tr>`;
-            }
-            return rows;
-        }
+                <div class="patient-info">
+                    <div><strong>Nombre:</strong> ${childName}</div>
+                    <div><strong>Edad:</strong> ${childAge} meses</div>
+                    <div><strong>Evaluador:</strong> ${evaluatorName}</div>
+                    <div><strong>Fecha:</strong> ${date}</div>
+                </div>
+                
+                <div class="total-score">Puntuación Total: ${totalScore}</div>
+                
+                <div class="questions-rows-container">
+                    <!-- Primera fila con 10 preguntas -->
+                    <div class="questions-row">
+                        ${generateQuestionsHTML(row1Questions)}
+                    </div>
+                    
+                    <!-- Segunda fila con 10 preguntas -->
+                    <div class="questions-row">
+                        ${generateQuestionsHTML(row2Questions)}
+                    </div>
+                </div>
+                
+                <div class="scoring-section">
+                    <div class="scoring-grid">
+                        <div class="scoring-box low-risk">
+                            <h4>BAJO (0-2)</h4>
+                            <p>Repetir a los 24m si es menor. Vigilar desarrollo.</p>
+                        </div>
+                        <div class="scoring-box medium-risk">
+                            <h4>MEDIO (3-7)</h4>
+                            <p>Entrevista de seguimiento. Si ≥2, evaluar.</p>
+                        </div>
+                        <div class="scoring-box high-risk">
+                            <h4>ALTO (8-20)</h4>
+                            <p>Remitir inmediatamente para evaluación.</p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
         
-        function generateRiskAssessment() {
-            const score = parseInt(document.getElementById('totalScore').value) || 0;
-            let assessment = '';
-            
-            if (score <= 2) {
-                assessment = `
-                    <h3 style="color: #4caf50;">BAJO RIESGO (0-2)</h3>
-                    <p>Repetir a los 24 meses si el niño es menor de 24 meses. Ninguna otra medida necesaria a menos que la vigilancia del desarrollo indique riesgo de TEA.</p>
-                `;
-            } else if (score >= 3 && score <= 7) {
-                assessment = `
-                    <h3 style="color: #ff9800;">RIESGO MEDIO (3-7)</h3>
-                    <p>Administrar la entrevista de seguimiento (M-CHAT-R/F). Si la puntuación se mantiene en 2 o superior, el niño ha resultado positivo. Medida necesaria: remita al niño para una evaluación diagnóstica y para determinar necesidad de atención temprana. Si la puntuación es 0-1, el niño ha resultado negativo. Ninguna otra medida es necesaria a menos que la vigilancia del desarrollo indique riesgo de TEA. El niño debe seguir vigilado en futuras visitas del programa del niño sano.</p>
-                `;
-            } else if (score >= 8) {
-                assessment = `
-                    <h3 style="color: #f44336;">RIESGO ALTO (8-20)</h3>
-                    <p>Es aceptable prescindir de la entrevista de seguimiento y se debe remitir el caso de inmediato para evaluación diagnóstica y para determinar necesidad de intervención temprana.</p>
-                `;
-            }
-            
-            return assessment;
-        }
-        
-        // Calcular automáticamente al cambiar respuestas
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', calculateScore);
-        });
-    </script>
+        // Crear y descargar el documento
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `M-CHAT-R_${childName.replace(/[^a-z0-9]/gi, '_')}.doc`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+</script>
 </body>
 </html>
